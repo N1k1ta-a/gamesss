@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Для тебя 💖</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+  }
+  .stars {
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+      radial-gradient(2px 2px at 60% 70%, #fff, transparent),
+      radial-gradient(1px 1px at 80% 20%, #fff, transparent),
+      radial-gradient(1px 1px at 40% 80%, #fff, transparent),
+      radial-gradient(2px 2px at 90% 60%, #fff, transparent);
+    animation: twinkle 4s infinite alternate;
+    opacity: 0.6;
+  }
+  @keyframes twinkle { from {opacity:0.3} to {opacity:0.8} }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    padding: 40px 25px;
+    box-shadow: 0 20px 60px rgba(255,105,180,0.3);
+    border: 1px solid rgba(255,255,255,0.15);
+    animation: fadeIn 0.6s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .emoji { font-size: 70px; margin-bottom: 20px; animation: bounce 2s infinite; }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  h1 { font-size: 22px; margin-bottom: 15px; line-height: 1.4; }
+  p { font-size: 16px; line-height: 1.6; opacity: 0.9; margin-bottom: 20px; }
+
+  .btn {
+    background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+    color: #fff;
+    border: none;
+    padding: 15px 35px;
+    font-size: 17px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(255,107,157,0.5);
+    transition: all 0.3s;
+    margin: 5px;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,107,157,0.7); }
+  .btn:active { transform: scale(0.95); }
+
+  .yes-btn { background: linear-gradient(135deg, #66bb6a, #43a047); box-shadow: 0 10px 30px rgba(102,187,106,0.5); }
+  .no-btn { background: linear-gradient(135deg, #999, #666); box-shadow: 0 10px 30px rgba(150,150,150,0.4); }
+
+  .hearts {
+    position: fixed; inset: 0;
+    pointer-events: none; overflow: hidden;
+  }
+  .heart {
+    position: absolute;
+    font-size: 24px;
+    animation: floatUp linear infinite;
+    opacity: 0.7;
+  }
+  @keyframes floatUp {
+    from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    to { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  }
+
+  .progress {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 25px;
+  }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s;
+  }
+  .dot.active { background: #ff6b9d; transform: scale(1.3); box-shadow: 0 0 10px #ff6b9d; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="hearts" id="hearts"></div>
+
+<div class="container">
+  <div class="progress" id="progress"></div>
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+const screens = [
+  {
+    emoji: "🌸",
+    title: "Привет, солнышко",
+    text: "Я знаю, что тебе сейчас грустно. И я очень хочу это исправить. Давай поиграем? Это займёт 2 минуты 💫",
+    btn: "Давай! →"
+  },
+  {
+    emoji: "💌",
+    title: "Первое задание",
+    text: "Закрой глаза и представь, что я сейчас рядом. Обнимаю тебя крепко-крепко. Чувствуешь? 🤗",
+    btn: "Чувствую ❤️"
+  },
+  {
+    emoji: "🎁",
+    title: "Маленький секрет",
+    text: "Ты знаешь, что когда ты грустишь — где-то далеко один человек тоже не может найти себе места? Потому что ты — его вселенная.",
+    btn: "Дальше →"
+  },
+  {
+    emoji: "😂",
+    title: "А теперь улыбнись!",
+    text: "Почему программисты путают Хэллоуин и Рождество? Потому что OCT 31 == DEC 25 😄",
+    btn: "Ха-ха, ещё!"
+  },
+  {
+    emoji: "🌟",
+    title: "Ты — особенна",
+    text: "В мире 8 миллиардов человек. И среди них есть одна, о которой я думаю каждый день. Это ты. И это не изменится никогда.",
+    btn: "Продолжай 💕"
+  },
+  {
+    emoji: "🫶",
+    title: "Последний вопрос",
+    text: "Обещаешь, что улыбнёшься хотя бы один раз сегодня? Ради меня?",
+    btn: "Обещаю ❤️",
+    btn2: "Не могу...",
+    isFinal: true
+  },
+  {
+    emoji: "💖",
+    title: "Спасибо тебе",
+    text: "Я горжусь тобой. Ты сильная, красивая и самая лучшая. Помни: расстояние — это временно, а моя любовь — навсегда. Я с тобой. До самого конца. Люблю тебя 🌍💕",
+    btn: "Обнимаю 🥰"
+  }
+];
+
+let current = 0;
+const card = document.getElementById('card');
+const progressEl = document.getElementById('progress');
+
+function renderProgress() {
+  progressEl.innerHTML = screens.map((_, i) =>
+    `<div class="dot ${i === current ? 'active' : ''}"></div>`
+  ).join('');
+}
+
+function render() {
+  renderProgress();
+  const s = screens[current];
+  card.innerHTML = `
+    <div class="emoji">${s.emoji}</div>
+    <h1>${s.title}</h1>
+    <p>${s.text}</p>
+    <button class="btn" onclick="next()">${s.btn}</button>
+    ${s.btn2 ? `<button class="btn no-btn" onclick="sadPath()">${s.btn2}</button>` : ''}
+  `;
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeIn 0.6s ease';
+}
+
+function next() {
+  if (current < screens.length - 1) {
+    current++;
+    if (current === 5) burstHearts(30);
+    render();
+  }
+}
+
+function sadPath() {
+  const s = screens[current];
+  s.text = "Эй, всё нормально. Грустить — это можно. Я просто хочу, чтобы ты знала: ты не одна. Я рядом, даже через экран. Давай обнимемся виртуально? 🤗";
+  s.btn = "Обнимаю";
+  s.btn2 = null;
+  render();
+}
+
+function burstHearts(count) {
+  for (let i = 0; i < count; i++) {
+    setTimeout(createHeart, i * 100);
+  }
+}
+
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.textContent = ['💖','💕','💗','❤️','💝','🌸'][Math.floor(Math.random()*6)];
+  heart.style.left = Math.random() * 100 + '%';
+  heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+  heart.style.fontSize = (16 + Math.random() * 20) + 'px';
+  document.getElementById('hearts').appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}
+
+// Постоянный лёгкий поток сердечек
+setInterval(() => { if (Math.random() > 0.6) createHeart(); }, 800);
+
+render();
+</script>
+</body>
+</html>
